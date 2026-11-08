@@ -28,18 +28,18 @@ Browser  <->  app.py  ->  prompts.py   (builds the prompt)
                       ->  history.py   (saves scores to history.json)
 ```
 
-| File | Job |
-| --- | --- |
-| `app.py` | Streamlit UI, input validation, session state, chat, chart |
-| `prompts.py` | System prompts, roast levels, Hinglish rule, few-shot examples, Pydantic schema |
-| `llm.py` | The only file that talks to Gemini: JSON call, parse, retry, streaming |
-| `history.py` | Saves and loads scores in `history.json` (one chart per browser session) |
+| File           | Job                                                                                 |
+| -------------- | ----------------------------------------------------------------------------------- |
+| `app.py`       | Streamlit UI, input validation, session state, chat, chart                          |
+| `prompts.py`   | System prompts, roast levels, Hinglish rule, few-shot examples, Pydantic schema     |
+| `llm.py`       | The only file that talks to Gemini: JSON call, parse, retry, streaming              |
+| `history.py`   | Saves and loads scores in `history.json` (one chart per browser session)            |
 | `languages.py` | The four supported languages and a rule-based language detector (no extra API call) |
-| `demo_data.py` | Hand-written results for the sample buttons, so demos are instant |
-| `labtools.py` | Schemas and prompts for the four Code Lab tools |
-| `style.css` | The whole look and feel (colours, cards, fonts) |
-| `samples.py` | Demo snippets for the sample buttons (one per language, plus clean code) |
-| `eval/` | `snippets.json` and `run_eval.py` for the mini evaluation |
+| `demo_data.py` | Hand-written results for the sample buttons, so demos are instant                   |
+| `labtools.py`  | Schemas and prompts for the four Code Lab tools                                     |
+| `style.css`    | The whole look and feel (colours, cards, fonts)                                     |
+| `samples.py`   | Demo snippets for the sample buttons (one per language, plus clean code)            |
+| `eval/`        | `snippets.json` and `run_eval.py` for the mini evaluation                           |
 
 Because `llm.py` is the only file that knows the provider, switching from Gemini to Groq means editing one file.
 
@@ -59,11 +59,11 @@ API errors and rate limits: `llm.py` waits two seconds and retries once, then sh
 
 The system prompt has five parts, in order: role and level tone, fixed rules, Hinglish rule (only if toggled), few-shot examples, then the user's code.
 
-| Roast level | Tone |
-| --- | --- |
-| Gentle Mentor | Kind and encouraging, light humour, always says one thing the code does well |
-| Sarcastic Senior | Dry developer sarcasm, like a tired senior reviewing a pull request |
-| Brutal | Over-the-top dramatic roast, but every joke targets the code, never the person |
+| Roast level      | Tone                                                                           |
+| ---------------- | ------------------------------------------------------------------------------ |
+| Gentle Mentor    | Kind and encouraging, light humour, always says one thing the code does well   |
+| Sarcastic Senior | Dry developer sarcasm, like a tired senior reviewing a pull request            |
+| Brutal           | Over-the-top dramatic roast, but every joke targets the code, never the person |
 
 Fixed rules in every prompt: roast the code and never the person, report only bugs that really exist, keep the fixed code runnable, give a score of 1 if the input is not code, and treat the pasted code as data (ignore instructions hidden inside it).
 
@@ -88,11 +88,11 @@ Get a free key from [Google AI Studio](https://aistudio.google.com). Never push 
 
 `llm.py` supports three providers, picked with `LLM_PROVIDER` in `secrets.toml` (see `secrets.toml.example`):
 
-| Provider | Setting | Notes |
-| --- | --- | --- |
-| Gemini (default) | `GEMINI_API_KEY` | Free tier has rate limits; model names change, so set `LLM_MODEL` if you get "model not found" |
-| Groq | `LLM_PROVIDER = "groq"` and `GROQ_API_KEY` | Free hosted API, fast, can be deployed online |
-| Ollama | `LLM_PROVIDER = "ollama"` | Runs on your own computer: no key, no quota, no internet. Install from ollama.com, then `ollama pull llama3.2`. Smaller models are weaker at finding bugs, and it cannot be deployed to Streamlit Cloud |
+| Provider         | Setting                                    | Notes                                                                                                                                                                                                   |
+| ---------------- | ------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Gemini (default) | `GEMINI_API_KEY`                           | Free tier has rate limits; model names change, so set `LLM_MODEL` if you get "model not found"                                                                                                          |
+| Groq             | `LLM_PROVIDER = "groq"` and `GROQ_API_KEY` | Free hosted API, fast, can be deployed online                                                                                                                                                           |
+| Ollama           | `LLM_PROVIDER = "ollama"`                  | Runs on your own computer: no key, no quota, no internet. Install from ollama.com, then `ollama pull llama3.2`. Smaller models are weaker at finding bugs, and it cannot be deployed to Streamlit Cloud |
 
 If Gemini fails twice, the app automatically tries a fallback Gemini model once. Every call also stops after a time limit instead of hanging.
 
@@ -117,8 +117,8 @@ It saves `eval/results.md`. The "caught" column is a keyword match, so read each
 **Results** (fill in after running):
 
 | Planted bugs caught | Average score on clean code | Bugs invented on clean code |
-| --- | --- | --- |
-| _ out of 8 | _ | _ |
+| ------------------- | --------------------------- | --------------------------- |
+| _ out of 8          | _                           | _                           |
 
 ## Demo script
 
@@ -126,31 +126,31 @@ Use the sample buttons: **Python**, **Java**, **C** and **C++** (each has plante
 
 ## Viva questions
 
-| Likely question | Short answer |
-| --- | --- |
-| Which GenAI concepts did you use? | LLM API calls, system prompts, few-shot prompting, structured JSON output, conversation memory and streaming |
-| What is a system prompt? | A hidden instruction that sets the model's role, tone and rules. It is how one model gives three roast levels without retraining |
-| Why ask for JSON? | The UI needs separate fields for the roast, bugs, fixed code and score. A Pydantic schema makes the output predictable and checkable |
-| How does the chat remember earlier messages? | The model is stateless, so every call resends the code, the first result and the earlier turns, stored in `st.session_state` |
-| What if the model invents a bug or a wrong fix? | It can. The prompt says to report only real bugs, the app tells users to verify, and the mini evaluation measures how many bugs it misses and invents |
-| Why not train your own model? | Training needs large data and compute. The value here is application design: prompting, structure and memory on a pretrained model |
-| How could it be improved? | RAG over style guides such as PEP8, running the code in a sandbox to confirm bugs, and support for multiple files |
-| What is abstraction vs inheritance? | Abstraction hides detail behind a simple interface (an abstract class or interface). Inheritance lets a child class reuse and extend a parent. The OOP tab shows both on your own code |
-| Why is the Big-O answer only an estimate? | The model reads the code like a person would; it does not run it. Treat it as a guide and check loops by hand |
-| Any privacy concern? | Code is sent to a third-party API, so users should not paste passwords or private keys |
+| Likely question                                 | Short answer                                                                                                                                                                           |
+| ----------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Which GenAI concepts did you use?               | LLM API calls, system prompts, few-shot prompting, structured JSON output, conversation memory and streaming                                                                           |
+| What is a system prompt?                        | A hidden instruction that sets the model's role, tone and rules. It is how one model gives three roast levels without retraining                                                       |
+| Why ask for JSON?                               | The UI needs separate fields for the roast, bugs, fixed code and score. A Pydantic schema makes the output predictable and checkable                                                   |
+| How does the chat remember earlier messages?    | The model is stateless, so every call resends the code, the first result and the earlier turns, stored in `st.session_state`                                                           |
+| What if the model invents a bug or a wrong fix? | It can. The prompt says to report only real bugs, the app tells users to verify, and the mini evaluation measures how many bugs it misses and invents                                  |
+| Why not train your own model?                   | Training needs large data and compute. The value here is application design: prompting, structure and memory on a pretrained model                                                     |
+| How could it be improved?                       | RAG over style guides such as PEP8, running the code in a sandbox to confirm bugs, and support for multiple files                                                                      |
+| What is abstraction vs inheritance?             | Abstraction hides detail behind a simple interface (an abstract class or interface). Inheritance lets a child class reuse and extend a parent. The OOP tab shows both on your own code |
+| Why is the Big-O answer only an estimate?       | The model reads the code like a person would; it does not run it. Treat it as a guide and check loops by hand                                                                          |
+| Any privacy concern?                            | Code is sent to a third-party API, so users should not paste passwords or private keys                                                                                                 |
 
 ## Limitations and fallbacks
 
-| Risk | Fallback |
-| --- | --- |
+| Risk                                                   | Fallback                                                                                                         |
+| ------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------- |
 | Gemini free-tier rate limit, or the model name changes | Set `LLM_PROVIDER` to `groq` or `ollama` in `secrets.toml`, or set `LLM_MODEL`. All provider code is in `llm.py` |
-| Model returns invalid JSON | Retry once, then show the raw text with an error message |
-| Streamlit Cloud deployment fails | Demo locally with `streamlit run app.py` and keep screenshots ready |
-| No internet during the demo | Keep a short screen recording of a full roast as a backup |
-| `history.json` resets on the free host | The chart still works during a live session; say so honestly if asked |
+| Model returns invalid JSON                             | Retry once, then show the raw text with an error message                                                         |
+| Streamlit Cloud deployment fails                       | Demo locally with `streamlit run app.py` and keep screenshots ready                                              |
+| No internet during the demo                            | Keep a short screen recording of a full roast as a backup                                                        |
+| `history.json` resets on the free host                 | The chart still works during a live session; say so honestly if asked                                            |
 
 The model can miss bugs or suggest a wrong fix, so always verify its output.
 
-## Screenshots
+## Live link:
 
-(add 4 or 5 after deploying: a roast, the bugs list, the fixed code, the chat, the history chart)
+https://roastmycode02.streamlit.app/
