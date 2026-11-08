@@ -1,0 +1,126 @@
+[
+  {
+    "id": 1,
+    "language": "Python",
+    "clean": false,
+    "planted_bug": "Off-by-one: range(len(a) + 1) raises IndexError",
+    "keywords": [
+      "indexerror",
+      "off-by-one",
+      "off by one",
+      "out of range",
+      "one past",
+      "len(a) + 1",
+      "len(a)+1"
+    ],
+    "code": "def total(a):\n    s = 0\n    for i in range(len(a) + 1):\n        s += a[i]\n    return s\n"
+  },
+  {
+    "id": 2,
+    "language": "Python",
+    "clean": false,
+    "planted_bug": "Mutable default argument shared across calls",
+    "keywords": [
+      "mutable",
+      "default",
+      "shared",
+      "persist"
+    ],
+    "code": "def add_item(x, items=[]):\n    items.append(x)\n    return items\n\nprint(add_item(1))\nprint(add_item(2))\n"
+  },
+  {
+    "id": 3,
+    "language": "C",
+    "clean": false,
+    "planted_bug": "Assignment instead of comparison in if (x = 5)",
+    "keywords": [
+      "assign",
+      "comparison",
+      "compar",
+      "=="
+    ],
+    "code": "#include <stdio.h>\nint main() {\n    int x = 3;\n    if (x = 5) {\n        printf(\"five\\n\");\n    }\n    return 0;\n}\n"
+  },
+  {
+    "id": 4,
+    "language": "Python",
+    "clean": false,
+    "planted_bug": "Division by user input with no zero check",
+    "keywords": [
+      "zero",
+      "zerodivision",
+      "divide",
+      "division"
+    ],
+    "code": "n = int(input(\"Enter a number: \"))\nprint(100 / n)\n"
+  },
+  {
+    "id": 5,
+    "language": "Python",
+    "clean": false,
+    "planted_bug": "File opened and never closed (resource leak)",
+    "keywords": [
+      "close",
+      "with ",
+      "context manager",
+      "resource",
+      "leak"
+    ],
+    "code": "f = open(\"data.txt\")\ntext = f.read()\nprint(len(text))\n"
+  },
+  {
+    "id": 6,
+    "language": "C++",
+    "clean": false,
+    "planted_bug": "Array allocated with new[] but released with delete instead of delete[] (undefined behaviour)",
+    "keywords": [
+      "delete[]",
+      "undefined",
+      "mismatch",
+      "new[]",
+      "leak"
+    ],
+    "code": "#include <iostream>\nint main() {\n    int* p = new int[3];\n    p[0] = 1;\n    std::cout << p[0] << std::endl;\n    delete p;\n    return 0;\n}\n"
+  },
+  {
+    "id": 7,
+    "language": "Python",
+    "clean": false,
+    "planted_bug": "Removing items from a list while iterating over it skips elements",
+    "keywords": [
+      "modif",
+      "while iterating",
+      "skip",
+      "remove"
+    ],
+    "code": "nums = [1, 2, 3, 4, 5, 6]\nfor n in nums:\n    if n % 2 == 0:\n        nums.remove(n)\nprint(nums)\n"
+  },
+  {
+    "id": 8,
+    "language": "Java",
+    "clean": false,
+    "planted_bug": "String compared with == instead of .equals()",
+    "keywords": [
+      "equals",
+      "reference",
+      "identity"
+    ],
+    "code": "public class Login {\n    public static void main(String[] args) {\n        String name = new String(\"admin\");\n        if (name == \"admin\") {\n            System.out.println(\"Welcome\");\n        }\n    }\n}\n"
+  },
+  {
+    "id": 9,
+    "language": "Python",
+    "clean": true,
+    "planted_bug": "None (clean code, should score 8 or higher)",
+    "keywords": [],
+    "code": "def binary_search(items, target):\n    low, high = 0, len(items) - 1\n    while low <= high:\n        mid = (low + high) // 2\n        if items[mid] == target:\n            return mid\n        if items[mid] < target:\n            low = mid + 1\n        else:\n            high = mid - 1\n    return -1\n"
+  },
+  {
+    "id": 10,
+    "language": "Python",
+    "clean": true,
+    "planted_bug": "None (clean code, should score 8 or higher)",
+    "keywords": [],
+    "code": "def word_count(text):\n    \"\"\"Return a dict mapping each lowercase word to its count.\"\"\"\n    counts = {}\n    for word in text.lower().split():\n        counts[word] = counts.get(word, 0) + 1\n    return counts\n"
+  }
+]
